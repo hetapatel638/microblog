@@ -30,4 +30,4 @@ RUN flask translate compile || true
 EXPOSE 5000
 
 # Start the app using your custom script
-CMD ["./boot.sh"]
+ENTRYPOINT ["./boot.sh"]
