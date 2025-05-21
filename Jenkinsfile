@@ -6,12 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/hetapatel638/microblog.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${IMAGE_NAME}:latest ."
@@ -32,14 +26,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                // You can run tests inside the Docker container as well
                 sh "docker run --rm ${IMAGE_NAME}:latest python -m unittest discover tests"
             }
         }
 
         stage('Deploy to Test Environment') {
             steps {
-                // Stop and remove any old container first, then run a new one
                 sh '''
                     docker stop microblog-test || true
                     docker rm microblog-test || true
@@ -62,7 +54,6 @@ pipeline {
 
         stage('Monitoring') {
             steps {
-                // Simple health check
                 sh '''
                     sleep 5
                     curl --fail http://localhost:5000 || (echo "Health check failed!" && exit 1)
